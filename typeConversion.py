@@ -8,7 +8,7 @@ from sys import getsizeof
 import matplotlib.pyplot as plt
 
 
-def generateFile(filename: str, datatype=np.float64, size=1000001):
+def generateFile(filename: str, datatype=np.float64, size=10000000):
     """Generate a .csv file with float64 """
     datatype = datatype
     # size = size
@@ -50,11 +50,16 @@ def typeConvF64_F16(times=1):
     data_cpu = np.loadtxt("output.csv", delimiter=",", dtype=np.float64)
 
     for _ in tqdm(range(times)):
+        'Sending Data to the gpu'
         data_gpu = cp.asarray(data_cpu)
+
         data_gpu_16 = data_gpu.astype(dtype=np.float16)
+
+        'Back from the gpu'
         data_back_cpu = cp.asnumpy(data_gpu_16)
-    # print(f'data_cpu:{data_cpu[0]}')
+
     print(f'GPU time taken for {times} times conversion:{time.time() - t_start}, type: {data_back_cpu.dtype}')
+
 
 
 'Main function'
